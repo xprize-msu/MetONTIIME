@@ -196,7 +196,10 @@ if (!dir.exists(d2_preprocessing)) {
     for (i in 1:length(fastq_files)) {
       num_reads_tot <- num_reads_tot + length(grep(x = readLines(fastq_files[i]), pattern = "^\\+$"))
     }
-    system(paste0("cat ", paste0(fastq_files, collapse = " "), " > ", d2_preprocessing, "/BC01_tmp0.fastq"))
+    # Pasting all the file names into this command can break this step as with 1000+ files the command can become 500K charactes with long file paths [NLP]
+    #system(paste0("cat ", paste0(fastq_files, collapse = " "), " > ", d2_preprocessing, "/BC01_tmp0.fastq"))
+    # Instead, cat all files in the d2_basecalling directory as in line 194 with the find command [NLP]
+    system(paste0('find ',d2_basecalling, ' -type f -name "*.fastq" -exec cat {} + > ', d2_preprocessing, "/BC01_tmp0.fastq"))
     cat(text = paste0("PCR primers trimming started at ", date()), file = logfile, sep = "\n", append = TRUE)
     cat(text = paste0("PCR primers trimming started at ", date()), sep = "\n")
     system(paste0(SEQTK, " trimfq -b ", primers_length, " -e ", primers_length, " ",  d2_preprocessing, "/BC01_tmp0.fastq > ",  d2_preprocessing, "/BC01_tmp1.fastq"))

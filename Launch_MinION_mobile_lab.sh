@@ -20,6 +20,22 @@
 
 RAW_READS_DIR=$1
 RAW_READS_DIR_FULL=$(realpath $RAW_READS_DIR)
+
+umask 0007
+
+# Prepare the python environment
+if [ `echo $PATH | grep "conda"` ]
+then
+    echo ""
+    echo "You're personal Anaconda/Miniconda installation is in your PATH variable."
+    echo "***Conda will be deactivated and your PATH modified***"
+    echo "Once you are done working in the xprize directory, run 'source ~/.bashrc'"
+    conda deactivate || :
+    export PATH=`echo $PATH | tr ":" "\n" | grep -v "conda" | perl -pe 'chomp if eof' | tr "\n" ":"`
+fi
+export CONDA3PATH=/mnt/research/xprize23/miniconda3
+module load Conda/3
 source activate MetONTIIME_env
+
 PIPELINE_DIR=$(realpath $( dirname "${BASH_SOURCE[0]}" ))
 nohup Rscript $PIPELINE_DIR/MinION_mobile_lab.R $PIPELINE_DIR/config_MinION_mobile_lab.R $RAW_READS_DIR_FULL &
