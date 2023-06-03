@@ -25,6 +25,7 @@ def main ():
     # Start the analysis shell script
     commands = []
     commands.append("RAW_READS_DIR=$1") # Script will take one input which is the root file of the anlysis folder from MinION_MobileLab.sh
+    commands.append("source /mnt/research/xprize23/launch_MetONTIIME_env.sh")
 
     # Start of the processing shell scripts
     processing = []
@@ -54,15 +55,15 @@ def main ():
         # Write analysis commands
         commands.append("mkdir " + analysis_path) # Create subdirectory for analysis
         commands.append("cp ${RAW_READS_DIR}_analysis/analysis/" + generic_barcode  + ".fast* " + analysis_path) # Copy data files
-        wrapper_command = "sh MetONTIIME.sh -w " + analysis_path  +  " -f " + analysis_path + "/manifest.txt -s " + primer_pars["S"] + " -t " + primer_pars["T"] + " -n " +  primer_pars["N"] + " -c VSEARCH -m " + primer_pars["M"] + " -q 0.80 -i " + primer_pars["I"]
-        commands.append("sbatch --reservation=xprize --mem " +  primer_pars["Mem"] + " --cpus-per-ask " +  primer_pars["N"] + " --time " +  primer_pars["Time"] + " --wrapper " + wrapper_command)
+        wrapper_command = '"sh MetONTIIME.sh -w ' + analysis_path  +  " -f " + analysis_path + "/manifest.txt -s " + primer_pars["S"] + " -t " + primer_pars["T"] + " -n " +  primer_pars["N"] + " -c VSEARCH -m " + primer_pars["M"] + " -q 0.80 -i " + primer_pars["I"] + '"'
+        commands.append("sbatch --reservation=xprize --mem " +  primer_pars["Mem"] + " --cpus-per-task " +  primer_pars["N"] + " --time " +  primer_pars["Time"] + " --wrap " + wrapper_command)
 
         # Write processing commands
         processing.append("unzip " + analysis_path + "/taxonomy.qza -d " + analysis_path + "/taxonomy.qza_DIR")
-        processing.append("grep -v -E 'Unassigned|uncultured|environmental|unidentified|unclassified|unverified' " + analysis_path + "/taxonomy.qza_DIR/data/taxonomy.tsv > taxonomy_output/" + generic_barcode + ".taxonomy.filtered.tsv")  
+        processing.append("grep -v -E 'Unassigned|uncultured|environmental|unidentified|unclassified|unverified' " + analysis_path + "/taxonomy.qza_DIR/*/data/taxonomy.tsv > taxonomy_output/" + generic_barcode + ".taxonomy.filtered.tsv")  
         
         # Update metadata
-        metadata_df_aug.loc[metadata_df_aug["barcode_set"]==barcode,"path"] = pwd + "/taxomy_output/" + generic_barcode + ".taxonomy.filtered.tsv"
+        metadata_df_aug.loc[metadata_df_aug["barcode_set"]==barcode,"path"] = pwd + "/taxonomy_output/" + generic_barcode + ".taxonomy.filtered.tsv"
         
         
         # DISABLED, Going to use the alternative 18S database as one of the database for testing the utility of adding species from the ML models
