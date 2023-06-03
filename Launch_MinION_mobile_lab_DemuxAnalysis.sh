@@ -43,4 +43,6 @@ Rscript $PIPELINE_DIR/MinION_mobile_lab_noMet_NoMetONTIIME.R $PIPELINE_DIR/confi
 echo 2. Start Demultiplexed Analysis, output in demux_analysis.out
 sh demux_analysis.sh $RAW_READS_DIR_FULL > demux_analysis.out 2>&1
 echo 3. Start Postprocessing
-sh demux_postprocessing.sh $RAW_READS_DIR
+echo This step needs to be run manually:
+echo demux_postprocessing.sh $RAW_READS_DIR
+#sh demux_postprocessing.sh $RAW_READS_DIR
