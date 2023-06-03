@@ -4,7 +4,9 @@ import pandas
 
 ### Parameter Set Defintions (DO NOT CHANGE) ###
 parameter_sets = {
-    "18S": {'S': "/mnt/research/xprize23/eDNA_databases/SILVA_SSU/silva-138-99-seqs.qza", 'T': "/mnt/research/xprize23/eDNA_databases/SILVA_SSU/silva-138-99-tax.qza", 'M': "20", 'I': "0.92"},
+    #"18S": {'S': "/mnt/research/xprize23/eDNA_databases/SILVA_SSU/silva-138-99-seqs.qza", 'T': "/mnt/research/xprize23/eDNA_databases/SILVA_SSU/silva-138-99-tax.qza", 'M': "20", 'I': "0.92"},
+    # New 18S filtered for primers and eukarya
+    "18S": {'S': "/mnt/research/xprize23/eDNA_databases/SILVA_SSU/silva-138-99-eukaya-extract-derep.seqs.qza", 'T': "/mnt/research/xprize23/eDNA_databases/SILVA_SSU/silva-138-99-tax-derep.qza", 'M': "20", 'I': "0.92"},    
     "16S": {'S': "/mnt/research/xprize23/eDNA_databases/SILVA_SSU/silva-138-99-seqs.qza",'T': "/mnt/research/xprize23/eDNA_databases/SILVA_SSU/silva-138-99-tax.qza", 'M': "20", 'I': "0.92"},
     "12S": {'S': "/mnt/research/xprize23/eDNA_databases/12S_databases/12S_Singapore_merged.derep.segments.clean.seqs.qza", 'T': "/mnt/research/xprize23/eDNA_databases/12S_databases/12S_Singapore_merged.derep.segments.tax.qza", 'M': "3", 'I': "0.98"},
     "18S_alt": {'S': "/mnt/research/xprize23/eDNA_databases/18S_databases/18S_Singapore_merged.derep.segments.clean.seqs.qza", 'T': "/mnt/research/xprize23/eDNA_databases/18S_databases/18S_Singapore_merged.derep.segments.tax.qza", 'M': "3", 'I': "0.98"},
