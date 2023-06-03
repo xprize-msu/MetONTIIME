@@ -57,7 +57,7 @@ def main ():
         commands.append("sh MetONTIIME.sh -w " + analysis_path  +  " -f " + analysis_path + "/manifest.txt -s " + primer_pars["S"] + " -t " + primer_pars["T"] + " -n 64 -c VSEARCH -m " + primer_pars["M"] + " -q 0.80 -i " + primer_pars["I"])
 
         # Write processing commands
-        processing.append("unzip " + analysis_path + "/data/taxonomy.qza -d " + analysis_path + "/taxonomy.qza_DIR")
+        processing.append("unzip " + analysis_path + "/taxonomy.qza -d " + analysis_path + "/taxonomy.qza_DIR")
         processing.append("grep -v -E 'Unassigned|uncultured|environmental|unidentified|unclassified|unverified' " + analysis_path + "/taxonomy.qza_DIR/taxonomy.tsv > taxonomy_output/" + generic_barcode + ".taxonomy.filtered.tsv")  
         
         # Update metadata
