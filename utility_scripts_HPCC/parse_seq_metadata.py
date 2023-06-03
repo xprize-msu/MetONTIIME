@@ -31,7 +31,7 @@ def main ():
     processing.append("mkdir taxonomy_output")
 
     # Augment Dataframe
-    row_n = metadata_df.shape[1]
+    row_n = metadata_df.shape[0]
     metadata_df_aug = metadata_df.assign(path=["NA"]*row_n)
     pwd=os.getcwd()
 
@@ -52,9 +52,8 @@ def main ():
    
         # Write analysis commands
         commands.append("mkdir " + analysis_path) # Create subdirectory for analysis
-        commands.append("cp ${RAW_READS_DIR}_analysis/analysis/" + generic_barcode  + " .fast*" + analysis_path) # Copy data files
-        commands.append("sh MetONTIIME.sh -w " + analysis_path  +  "-f " + analysis_path + "/manifest.txt \ ")
-        commands.append("    -s " + primer_pars["S"] + " -t " + primer_pars["T"] + " -n 64 -c VSEARCH -m " + primer_pars["M"] + " -q 0.80 -i " + primer_pars["I"])
+        commands.append("cp ${RAW_READS_DIR}_analysis/analysis/" + generic_barcode  + ".fast* " + analysis_path) # Copy data files
+        commands.append("sh MetONTIIME.sh -w " + analysis_path  +  " -f " + analysis_path + "/manifest.txt -s " + primer_pars["S"] + " -t " + primer_pars["T"] + " -n 64 -c VSEARCH -m " + primer_pars["M"] + " -q 0.80 -i " + primer_pars["I"])
 
         # Write processing commands
         processing.append("unzip " + analysis_path + "/taxonomy.qza -d " + analysis_path + "/taxonomy.qza_DIR")
@@ -64,18 +63,20 @@ def main ():
         metadata_df_aug.loc[metadata_df_aug["barcode_set"]==barcode,"path"] = pwd + "/taxomy_output/" + generic_barcode + ".taxonomy.filtered.tsv"
         
         
-        if primer_set == "18S":
-            generic_barcode = generic_barcode + "_18Salt"
-            primer_pars = parameter_sets["18S_alt"]
-            commands.append("mkdir " + analysis_path) # Create subdirectory for analysis
-            commands.append("cp ${RAW_READS_DIR}_analysis/analysis/" + generic_barcode  + " .fast*" + analysis_path) # Copy data files
-            commands.append("sh MetONTIIME.sh -w " + analysis_path  +  "-f " + analysis_path + "/manifest.txt \ ")
-            commands.append("    -s " + primer_pars["S"] + " -t " + primer_pars["T"] + " -n 64 -c VSEARCH -m " + primer_pars["M"] + " -q 0.80 -i " + primer_pars["I"])
-
-            processing.append("unzip " + analysis_path + "/taxonomy.qza -d " + analysis_path + "/taxonomy.qza_DIR")
-            processing.append("grep -v -E 'Unassigned|uncultured|environmental|unidentified|unclassified|unverified' " + analysis_path + "/taxonomy.qza_DIR/taxonomy.tsv > taxonomy_output/" + generic_barcode + ".taxonomy.filtered.tsv")  
-        
-            metadata_df_aug.loc[metadata_df_aug["barcode_set"]==barcode,"path"] = pwd + "/taxomy_output/" + generic_barcode + ".taxonomy.filtered.tsv"
+        # DISABLED, Going to use the alternative 18S database as one of the database for testing the utility of adding species from the ML models
+        #if primer_set == "18S":
+        #    alt_barcode = generic_barcode + "_18Salt"
+        #    primer_pars = parameter_sets["18S_alt"]
+        #    analysis_path = "${RAW_READS_DIR}_analysis/analysis/" + alt_barcode  + "_analysis"
+        #
+        #    commands.append("mkdir " + analysis_path) # Create subdirectory for analysis
+        #    commands.append("cp ${RAW_READS_DIR}_analysis/analysis/" + generic_barcode  + ".fast* " + analysis_path) # Copy data files
+        #    commands.append("sh MetONTIIME.sh -w " + analysis_path  +  " -f " + analysis_path + "/manifest.txt -s " + primer_pars["S"] + " -t " + primer_pars["T"] + " -n 64 -c VSEARCH -m " + primer_pars["M"] + " -q 0.80 -i " + primer_pars["I"])
+        #
+        #    processing.append("unzip " + analysis_path + "/taxonomy.qza -d " + analysis_path + "/taxonomy.qza_DIR")
+        #    processing.append("grep -v -E 'Unassigned|uncultured|environmental|unidentified|unclassified|unverified' " + analysis_path + "/taxonomy.qza_DIR/taxonomy.tsv > taxonomy_output/" + generic_barcode + ".taxonomy.filtered.tsv")  
+        #
+        #    metadata_df_aug.loc[metadata_df_aug["barcode_set"]==barcode,"path"] = pwd + "/taxomy_output/" + alt_barcode + ".taxonomy.filtered.tsv"
 
 
     output = open("demux_analysis.sh","w")
@@ -83,9 +84,9 @@ def main ():
     output.close()
 
     output = open("demux_postprocessing.sh","w")
-    output.write("\n".join(commands))
+    output.write("\n".join(processing))
     output.close()
 
-    metadata_df_aug.to_csv("metadata_file"+.augmented)
+    metadata_df_aug.to_csv(metadata_file+".augmented")
 
 main()
