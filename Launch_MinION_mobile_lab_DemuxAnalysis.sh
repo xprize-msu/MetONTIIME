@@ -38,8 +38,9 @@ module load Conda/3
 source activate MetONTIIME_env
 
 PIPELINE_DIR=$(realpath $( dirname "${BASH_SOURCE[0]}" ))
-echo 1. Start Basecalling (output in basecalling.out)
+echo 1. Start Basecalling, output in basecalling.out
 Rscript $PIPELINE_DIR/MinION_mobile_lab_noMet_NoMetONTIIME.R $PIPELINE_DIR/config_MinION_mobile_lab.R $RAW_READS_DIR_FULL > basecalling.out 2>&1
-echo 2. Start Demultiplexed Analysis (output in demux_analysis.out)
+echo 2. Start Demultiplexed Analysis, output in demux_analysis.out
 sh demux_analysis.sh $RAW_READS_DIR_FULL > demux_analysis.out 2>&1
-echo 3. Start Postprocessing (TBD)
+echo 3. Start Postprocessing
+sh demux_postprocessing.sh $RAW_READS_DIR

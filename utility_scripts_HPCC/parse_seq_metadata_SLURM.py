@@ -28,6 +28,7 @@ def main ():
 
     # Start of the processing shell scripts
     processing = []
+    processing.append("RAW_READS_DIR=$1")
     processing.append("mkdir taxonomy_output")
 
     # Augment Dataframe
@@ -57,7 +58,7 @@ def main ():
         commands.append("sbatch --reservation=xprize --mem " +  primer_pars["Mem"] + " --cpus-per-ask " +  primer_pars["N"] + " --time " +  primer_pars["Time"] + " --wrapper " + wrapper_command)
 
         # Write processing commands
-        processing.append("unzip " + analysis_path + "/taxonomy.qza -d " + analysis_path + "/taxonomy.qza_DIR")
+        processing.append("unzip " + analysis_path + "/data/taxonomy.qza -d " + analysis_path + "/taxonomy.qza_DIR")
         processing.append("grep -v -E 'Unassigned|uncultured|environmental|unidentified|unclassified|unverified' " + analysis_path + "/taxonomy.qza_DIR/taxonomy.tsv > taxonomy_output/" + generic_barcode + ".taxonomy.filtered.tsv")  
         
         # Update metadata
