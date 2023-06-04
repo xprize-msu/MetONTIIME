@@ -8,8 +8,8 @@ parameter_sets = {
     # New 18S filtered for primers and eukarya    
     "18S": {"Time": "120", "Mem": "96GB", "N": "64", 'S': "/mnt/research/xprize23/eDNA_databases/SILVA_SSU/silva-138-99-eukaya-derepONLY-seqs.qza", 'T': "/mnt/research/xprize23/eDNA_databases/SILVA_SSU/silva-138-99-tax-derepONLY.qza", 'M': "20", 'I': "0.92"},
     "16S": {"Time": "120", "Mem": "96GB", "N": "64", 'S': "/mnt/research/xprize23/eDNA_databases/SILVA_SSU/silva-138-99-eukaya-derepONLY-seqs.qza", 'T': "/mnt/research/xprize23/eDNA_databases/SILVA_SSU/silva-138-99-tax-derepONLY.qza", 'M': "20", 'I': "0.92"},
-    "12S": {"Time": "60", "Mem": "64GB", "N": "16", 'S': "/mnt/research/xprize23/eDNA_databases/12S_databases/12S_Singapore_merged.derepONLY.clean.seqs.qza", 'T': "/mnt/research/xprize23/eDNA_databases/12S_databases/12S_Singapore_merged.derep.tax.qza", 'M': "3", 'I': "0.98"},
-    "18S_alt": {"Time": "60", "Mem": "64GB", "N": "16", 'S': "/mnt/research/xprize23/eDNA_databases/18S_databases/18S_Singapore_merged.derepONLY.clean.seqs.qza", 'T': "/mnt/research/xprize23/eDNA_databases/18S_databases/18S_Singapore_merged.derep.tax.qza", 'M': "3", 'I': "0.98"},
+    "12S": {"Time": "120", "Mem": "64GB", "N": "16", 'S': "/mnt/research/xprize23/eDNA_databases/12S_databases/12S_Singapore_merged.derepONLY.clean.seqs.qza", 'T': "/mnt/research/xprize23/eDNA_databases/12S_databases/12S_Singapore_merged.derep.tax.qza", 'M': "3", 'I': "0.98"},
+    "18S_alt": {"Time": "120", "Mem": "64GB", "N": "16", 'S': "/mnt/research/xprize23/eDNA_databases/18S_databases/18S_Singapore_merged.derepONLY.clean.seqs.qza", 'T': "/mnt/research/xprize23/eDNA_databases/18S_databases/18S_Singapore_merged.derep.tax.qza", 'M': "3", 'I': "0.98"},
     "COI": {"Time": "180", "Mem": "256GB", "N": "64", 'S': "/mnt/research/xprize23/eDNA_databases/COI_insect_database/COI.derepONLY.clean.seqs.qza", 'T': "/mnt/research/xprize23/eDNA_databases/COI_insect_database/COI.derep.tax.qza", 'M': "3", 'I': "0.98"},
 }
 
