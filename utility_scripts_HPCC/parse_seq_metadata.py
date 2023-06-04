@@ -7,10 +7,10 @@ parameter_sets = {
     #"18S": {'S': "/mnt/research/xprize23/eDNA_databases/SILVA_SSU/silva-138-99-seqs.qza", 'T': "/mnt/research/xprize23/eDNA_databases/SILVA_SSU/silva-138-99-tax.qza", 'M': "20", 'I': "0.92"},
     # New 18S filtered for primers and eukarya
     "18S": {'S': "/mnt/research/xprize23/eDNA_databases/SILVA_SSU/silva-138-99-eukaya-derepONLY-seqs.qza", 'T': "/mnt/research/xprize23/eDNA_databases/SILVA_SSU/silva-138-99-tax-derepONLY.qza", 'M': "20", 'I': "0.92"},    
-    "16S": {'S': "/mnt/research/xprize23/eDNA_databases/SILVA_SSU/silva-138-99-seqs.qza",'T': "/mnt/research/xprize23/eDNA_databases/SILVA_SSU/silva-138-99-tax.qza", 'M': "20", 'I': "0.92"},
-    "12S": {'S': "/mnt/research/xprize23/eDNA_databases/12S_databases/12S_Singapore_merged.derep.segments.clean.seqs.qza", 'T': "/mnt/research/xprize23/eDNA_databases/12S_databases/12S_Singapore_merged.derep.segments.tax.qza", 'M': "3", 'I': "0.98"},
-    "18S_alt": {'S': "/mnt/research/xprize23/eDNA_databases/18S_databases/18S_Singapore_merged.derep.segments.clean.seqs.qza", 'T': "/mnt/research/xprize23/eDNA_databases/18S_databases/18S_Singapore_merged.derep.segments.tax.qza", 'M': "3", 'I': "0.98"},
-    "COI": {'S': "/mnt/research/xprize23/eDNA_databases/COI_insect_database/COI.derep.segments.clean.seqs.qza", 'T': "/mnt/research/xprize23/eDNA_databases/COI_insect_database/COI.derep.segments.tax.qza", 'M': "3", 'I': "0.98"},
+    "16S": {'S': "/mnt/research/xprize23/eDNA_databases/SILVA_SSU/silva-138-99-eukaya-derepONLY-seqs.qza", 'T': "/mnt/research/xprize23/eDNA_databases/SILVA_SSU/silva-138-99-tax-derepONLY.qza", 'M': "20", 'I': "0.92"},    
+    "12S": {'S': "/mnt/research/xprize23/eDNA_databases/12S_databases/12S_Singapore_merged.derepONLY.clean.seqs.qza", 'T': "/mnt/research/xprize23/eDNA_databases/12S_databases/12S_Singapore_merged.derep.tax.qza", 'M': "3", 'I': "0.98"},
+    "18S_alt": {'S': "/mnt/research/xprize23/eDNA_databases/18S_databases/18S_Singapore_merged.derepONLY.clean.seqs.qza", 'T': "/mnt/research/xprize23/eDNA_databases/18S_databases/18S_Singapore_merged.derep.tax.qza", 'M': "3", 'I': "0.98"},
+    "COI": {'S': "/mnt/research/xprize23/eDNA_databases/COI_insect_database/COI.derepONLY.clean.seqs.qza", 'T': "/mnt/research/xprize23/eDNA_databases/COI_insect_database/COI.derep.tax.qza", 'M': "3", 'I': "0.98"},
 }
 
 def main ():
@@ -20,7 +20,7 @@ def main ():
     metadata_df = pandas.read_csv(metadata_file)
 
     # Isolate key columns and display output
-    metadata_select = metadata_df.loc[:, metadata_df.columns.isin(["barcode gene targeted","barcode_set","barcoding_kit","flow_chemistry"])]
+    metadata_select = metadata_df.loc[:, metadata_df.columns.isin(["barcode gene targeted","barcode_set","barcoding_kit","flow_chemistry","target_read_length"])]
     print ("Sample Summary:\n")
     print(metadata_select)
 
@@ -36,6 +36,7 @@ def main ():
     # Augment Dataframe
     row_n = metadata_df.shape[0]
     metadata_df_aug = metadata_df.assign(path=["NA"]*row_n)
+    metadata_df_aug = metadata_df.assign(taxid_protocol=["NA"]*row_n)
     pwd=os.getcwd()
 
     # Write commands for each barcode
@@ -64,7 +65,7 @@ def main ():
         
         # Update metadata
         metadata_df_aug.loc[metadata_df_aug["barcode_set"]==barcode,"path"] = pwd + "/taxonomy_output/" + generic_barcode + ".taxonomy.filtered.tsv"
-        
+        metadata_df_aug.loc[metadata_df_aug["barcode_set"]==barcode,"taxid_protocol"] = "Database:" + primer_pars["S"] + ";" + primer_pars["T"] + ";Method:VSEARCH;Matches" + primer_pars["M"] + ";QueryCoverage:0.80;Identity%:" + primer_pars["I"]        
         
         # DISABLED, Going to use the alternative 18S database as one of the database for testing the utility of adding species from the ML models
         #if primer_set == "18S":
