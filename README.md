@@ -5,6 +5,8 @@ MetONTIIME is a fine pipeline and if you like to use it from scratch on your sys
 If you are trying to run the pipeline on data in the XPRIZE23 directory, the general process is:
 
 ```
+# Got to the folder with the "fast5" folder of target data from a MinION Sequencer
+
 # Get metadata file
 ln -s <path_to_meta_data> .
 
