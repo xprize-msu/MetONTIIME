@@ -1,4 +1,41 @@
-**This respository has been modified to work on MSU's Higher Performance Computing Cluster**
+**This respository has been modified to work on MSU's Higher Performance Computing Cluster for the XPRIZE23 Competition**
+
+MetONTIIME is a fine pipeline and if you like to use it from scratch on your system please see the original repot at: https://github.com/MaestSi/MetONTIIME
+
+If you are trying to run the pipeline on data in the XPRIZE23 directory, the general process is:
+
+```
+# Get metadata file
+ln -s <path_to_meta_data> .
+
+# Setup folder using metadata
+sh /mnt/research/xprize23/gitclones/MetONTIIME/utility_scripts_HPCC/setup_analysis_folder_SLURM.sh <path_to_meta_data> 
+
+# Start a interactive session on a compute not with gpus
+salloc --cpus-per-task 64 --time 4:00:00 --mem 256GB --gpus 2 --reservation=xprize
+
+# Start the pipeline
+sh Launch_MinION_mobile_lab_DemuxAnalysis.sh fast5/
+
+# After SLURM jobs are done (1-2 hours, hopefully)
+sh demux_postprocessing.sh fast5
+
+```
+
+This process creates the following output
+
+```
+# Logs
+basecalling.out        	# All basecalling and demultiplexing
+demux_analysis.out     	# Creating analysis folders and submitting analysis jobs
+slurm-XXYYZZZZ.out      # Individual analysis logs
+
+# Output
+fast5_analysis         				# Folder with all the analysis files (similar to base MetONTIIME)
+taxonomy_output        				# Filtered taxonomies
+eDNA_sequencing_only_meta.csv.augmented  	# Metadata file with path to taxonomies
+
+```
 
 # MetONTIIME
 
