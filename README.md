@@ -40,6 +40,11 @@ eDNA_sequencing_only_meta.csv.augmented  	# Metadata file with path to taxonomie
 If you are trying to run this pipeline on a DIFFERENT system and/or for a different purpose you have gone beyond the point
 where I can offer you any aide. May God have mercy on your soul.
 
+--------------------------------------------------------------------------------------------------------------------------
+Below is the original MetONTIIME README reproduced as a reference
+--------------------------------------------------------------------------------------------------------------------------
+
+
 # MetONTIIME
 
 **MetONTIIME** is a Meta-barcoding pipeline for analysing ONT data in QIIME2 framework. The whole bioinformatic workflow consists of a preprocessing pipeline and a script emulating EPI2ME 16S workflow, aligning each read against a user-defined database, so to make the whole bioinformatic analysis from raw fast5 files to taxonomy assignments straightforward and simple. Tested with Ubuntu 20.04.1 LTS. For comparison of results obtained changing the reference database and PCR primers, have a look at Stephane Plaisance's interesting [work](https://github.com/Nucleomics-VIB/InSilico_PCR).
