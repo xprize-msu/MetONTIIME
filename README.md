@@ -44,8 +44,8 @@ a metadata csv file that is formated according to what we used during the XPRIZE
 "config_MinION_mobile_lab_XPRIZE23_FLO_MIN114_SQK_NBD114_24_dbSILVA_id92.R"
 
 
-If, after readingthe above, you still want to try and run this pipeline on a DIFFERENT system and/or for a DIFFERENT purpose, you have gone beyond the point
-where I can offer you any aide. May God have mercy on your soul.
+*If, after reading the above, you still want to try and run this pipeline on a DIFFERENT system and/or for a DIFFERENT purpose, you have gone beyond the point
+where I can offer you any aide. May God have mercy on your soul.*
 
 --------------------------------------------------------------------------------------------------------------------------
 Below is the original MetONTIIME README reproduced as a reference
