@@ -37,7 +37,14 @@ eDNA_sequencing_only_meta.csv.augmented  	# Metadata file with path to taxonomie
 
 ```
 
-If you are trying to run this pipeline on a DIFFERENT system and/or for a different purpose you have gone beyond the point
+Major changes are modification to the MobileLab scripts (Launch_MinION_mobile_lab_DemuxAnalysis.sh,MinION_mobile_lab_noMet_NoMetONTIIME.R) which replace
+the single run of MetONTIIME with a shell script of multiple MetONTIIME runs which can be customized to use different databases and parameters per sample
+(i.e. if you multiplexed different primers in the same flow cell). Scripts for generating these runs can be found in "utility_scripts_HPCC" and require
+a metadata csv file that is formated according to what we used during the XPRIZE23 competion and uses petermined basecalling values as specified in
+"config_MinION_mobile_lab_XPRIZE23_FLO_MIN114_SQK_NBD114_24_dbSILVA_id92.R"
+
+
+If, after readingthe above, you still want to try and run this pipeline on a DIFFERENT system and/or for a DIFFERENT purpose, you have gone beyond the point
 where I can offer you any aide. May God have mercy on your soul.
 
 --------------------------------------------------------------------------------------------------------------------------
