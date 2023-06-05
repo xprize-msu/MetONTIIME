@@ -40,6 +40,7 @@ def main ():
     pwd=os.getcwd()
 
     # Write commands for each barcode
+    skip_list = [] # Record barcodes and skip ones already done (because multiple primer runs may be pooled under the same BC)
     for index, row in metadata_select.iterrows():
         barcode = row["barcode_set"]
         generic_barcode = "BC" + barcode.split("NB")[-1]
@@ -51,42 +52,28 @@ def main ():
         #print(generic_barcode)
         #print(primer_set)
         #print(primer_pars)
-  
+
+        if not barcode in skip_list:
+            skip_list.append(barcode)
    
-        # Write on command per id_percent
-        for id in primer_pars["I"]:
-            analysis_path = "${RAW_READS_DIR}_analysis/analysis/" + generic_barcode  + "_" + id  + "_analysis"
+            # Write on command per id_percent
+            for id in primer_pars["I"]:
+                analysis_path = "${RAW_READS_DIR}_analysis/analysis/" + generic_barcode  + "_" + id  + "_analysis"
 
-            # Write analysis commands
-            commands.append("mkdir " + analysis_path) # Create subdirectory for analysis
-            commands.append("cp ${RAW_READS_DIR}_analysis/analysis/" + generic_barcode  + ".fast* " + analysis_path) # Copy data files
-            wrapper_command = '"sh MetONTIIME_OTU100.sh -w ' + analysis_path  +  " -f " + analysis_path + "/manifest.txt -s " + primer_pars["S"] + " -t " + primer_pars["T"] + " -n " +  primer_pars["N"] + " -c VSEARCH -m " + primer_pars["M"] + " -q 0.80 -i " + id + '"'
-            commands.append("sbatch --reservation=xprize --mem " +  primer_pars["Mem"] + " --cpus-per-task " +  primer_pars["N"] + " --time " +  primer_pars["Time"] + " --wrap " + wrapper_command)
+                # Write analysis commands
+                commands.append("mkdir " + analysis_path) # Create subdirectory for analysis
+                commands.append("cp ${RAW_READS_DIR}_analysis/analysis/" + generic_barcode  + ".fast* " + analysis_path) # Copy data files
+                wrapper_command = '"sh MetONTIIME_OTU100.sh -w ' + analysis_path  +  " -f " + analysis_path + "/manifest.txt -s " + primer_pars["S"] + " -t " + primer_pars["T"] + " -n " +  primer_pars["N"] + " -c VSEARCH -m " + primer_pars["M"] + " -q 0.80 -i " + id + '"'
+                commands.append("sbatch --reservation=xprize --mem " +  primer_pars["Mem"] + " --cpus-per-task " +  primer_pars["N"] + " --time " +  primer_pars["Time"] + " --wrap " + wrapper_command)
 
-            # Write processing commands
-            processing.append("unzip " + analysis_path + "/taxonomy.qza -d " + analysis_path + "/taxonomy.qza_DIR")
-            processing.append("grep -v -E 'Unassigned|uncultured|environmental|unidentified|unclassified|unverified' " + analysis_path + "/taxonomy.qza_DIR/*/data/taxonomy.tsv > taxonomy_output/" + generic_barcode + ".taxonomy.filtered.tsv")  
+                # Write processing commands
+                processing.append("unzip " + analysis_path + "/taxonomy.qza -d " + analysis_path + "/taxonomy.qza_DIR")
+                processing.append("grep -v -E 'Unassigned|uncultured|environmental|unidentified|unclassified|unverified' " + analysis_path + "/taxonomy.qza_DIR/*/data/taxonomy.tsv > taxonomy_output/" + generic_barcode + ".taxonomy.filtered.tsv")  
         
-        # Update metadata
-        metadata_df_aug.loc[metadata_df_aug["barcode_set"]==barcode,"path"] = pwd + "/taxonomy_output/" + generic_barcode + ".taxonomy.filtered.tsv"
-        metadata_df_aug.loc[metadata_df_aug["barcode_set"]==barcode,"taxid_protocol"] = "Database:" + primer_pars["S"] + ";" + primer_pars["T"] + ";Method:VSEARCH;Matches" + primer_pars["M"] + ";QueryCoverage:0.80;Identity%:" + "::".join(primer_pars["I"])
+            # Update metadata
+            metadata_df_aug.loc[metadata_df_aug["barcode_set"]==barcode,"path"] = pwd + "/taxonomy_output/" + generic_barcode + ".taxonomy.filtered.tsv"
+            metadata_df_aug.loc[metadata_df_aug["barcode_set"]==barcode,"taxid_protocol"] = "Database:" + primer_pars["S"] + ";" + primer_pars["T"] + ";Method:VSEARCH;Matches" + primer_pars["M"] + ";QueryCoverage:0.80;Identity%:" + "::".join(primer_pars["I"])
         
-        # DISABLED, Going to use the alternative 18S database as one of the database for testing the utility of adding species from the ML models
-        #if primer_set == "18S":
-        #    alt_barcode = generic_barcode + "_18Salt"
-        #   primer_pars = parameter_sets["18S_alt"]
-        #    analysis_path = "${RAW_READS_DIR}_analysis/analysis/" + alt_barcode  + "_analysis"
-        #
-        #    commands.append("mkdir " + analysis_path) # Create subdirectory for analysis
-        #    commands.append("cp ${RAW_READS_DIR}_analysis/analysis/" + generic_barcode  + ".fast* " + analysis_path) # Copy data files
-        #    commands.append("sh MetONTIIME.sh -w " + analysis_path  +  " -f " + analysis_path + "/manifest.txt -s " + primer_pars["S"] + " -t " + primer_pars["T"] + " -n 64 -c VSEARCH -m " + primer_pars["M"] + " -q 0.80 -i " + primer_pars["I"])
-        #
-        #    processing.append("unzip " + analysis_path + "/taxonomy.qza -d " + analysis_path + "/taxonomy.qza_DIR")
-        #    processing.append("grep -v -E 'Unassigned|uncultured|environmental|unidentified|unclassified|unverified' " + analysis_path + "/taxonomy.qza_DIR/taxonomy.tsv > taxonomy_output/" + generic_barcode + ".taxonomy.filtered.tsv")  
-        #
-        #    metadata_df_aug.loc[metadata_df_aug["barcode_set"]==barcode,"path"] = pwd + "/taxomy_output/" + alt_barcode + ".taxonomy.filtered.tsv"
-
-
     output = open("demux_analysis.sh","w")
     output.write("\n".join(commands))
     output.close()
