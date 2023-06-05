@@ -114,7 +114,7 @@ qiime vsearch dereplicate-sequences \
 qiime vsearch cluster-features-de-novo \
 --i-sequences rep-seqs_tmp.qza \
 --i-table table_tmp.qza \
---p-perc-identity 0.97 \
+--p-perc-identity 1 \
 --o-clustered-table table.qza \
 --o-clustered-sequences rep-seqs.qza \
 --p-threads $THREADS
