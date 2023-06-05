@@ -6,10 +6,9 @@ import pandas
 parameter_sets = {
     #"18S": {"Time": "240", "Mem": "256GB", "N": "64", 'S': "/mnt/research/xprize23/eDNA_databases/SILVA_SSU/silva-138-99-seqs.qza", 'T': "/mnt/research/xprize23/eDNA_databases/SILVA_SSU/silva-138-99-tax.qza", 'M': "20", 'I': "0.92"},
     # New 18S filtered for primers and eukarya    
-    "18S": {"Time": "120", "Mem": "96GB", "N": "64", 'S': "/mnt/research/xprize23/eDNA_databases/SILVA_SSU/silva-138-99-eukaya-derepONLY-seqs.qza", 'T': "/mnt/research/xprize23/eDNA_databases/SILVA_SSU/silva-138-99-tax-derepONLY.qza", 'M': "20", 'I': ["0.92","0.95","0.98"]},
+    "18S": {"Time": "120", "Mem": "128GB", "N": "64", 'S': "/mnt/research/xprize23/eDNA_databases/SILVA_SSU/silva-138-99-eukaya-derepONLY-seqs.qza", 'T': "/mnt/research/xprize23/eDNA_databases/SILVA_SSU/silva-138-99-tax-derepONLY.qza", 'M': "20", 'I': ["0.92","0.95","0.98"]},
     "16S": {"Time": "120", "Mem": "96GB", "N": "64", 'S': "/mnt/research/xprize23/eDNA_databases/SILVA_SSU/silva-138-99-eukaya-derepONLY-seqs.qza", 'T': "/mnt/research/xprize23/eDNA_databases/SILVA_SSU/silva-138-99-tax-derepONLY.qza", 'M': "20", 'I': "0.92"},
     "12S": {"Time": "120", "Mem": "64GB", "N": "32", 'S': "/mnt/research/xprize23/eDNA_databases/12S_databases/12S_Singapore_merged.derepONLY.clean.seqs.qza", 'T': "/mnt/research/xprize23/eDNA_databases/12S_databases/12S_Singapore_merged.derep.tax.qza", 'M': "3", 'I': "0.98"},
-    "18S_alt": {"Time": "120", "Mem": "64GB", "N": "32", 'S': "/mnt/research/xprize23/eDNA_databases/18S_databases/18S_Singapore_merged.derepONLY.clean.seqs.qza", 'T': "/mnt/research/xprize23/eDNA_databases/18S_databases/18S_Singapore_merged.derep.tax.qza", 'M': "3", 'I': "0.98"},
     "COI": {"Time": "180", "Mem": "256GB", "N": "64", 'S': "/mnt/research/xprize23/eDNA_databases/COI_insect_database/COI.derepONLY.clean.seqs.qza", 'T': "/mnt/research/xprize23/eDNA_databases/COI_insect_database/COI.derep.tax.qza", 'M': "3", 'I': "0.98"},
 }
 
@@ -61,7 +60,7 @@ def main ():
             # Write analysis commands
             commands.append("mkdir " + analysis_path) # Create subdirectory for analysis
             commands.append("cp ${RAW_READS_DIR}_analysis/analysis/" + generic_barcode  + ".fast* " + analysis_path) # Copy data files
-            wrapper_command = '"sh MetONTIIME.sh -w ' + analysis_path  +  " -f " + analysis_path + "/manifest.txt -s " + primer_pars["S"] + " -t " + primer_pars["T"] + " -n " +  primer_pars["N"] + " -c VSEARCH -m " + primer_pars["M"] + " -q 0.80 -i " + id + '"'
+            wrapper_command = '"sh MetONTIIME_OTU100.sh -w ' + analysis_path  +  " -f " + analysis_path + "/manifest.txt -s " + primer_pars["S"] + " -t " + primer_pars["T"] + " -n " +  primer_pars["N"] + " -c VSEARCH -m " + primer_pars["M"] + " -q 0.80 -i " + id + '"'
             commands.append("sbatch --reservation=xprize --mem " +  primer_pars["Mem"] + " --cpus-per-task " +  primer_pars["N"] + " --time " +  primer_pars["Time"] + " --wrap " + wrapper_command)
 
             # Write processing commands
