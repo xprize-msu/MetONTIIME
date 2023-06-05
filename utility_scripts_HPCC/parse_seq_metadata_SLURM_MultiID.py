@@ -68,11 +68,11 @@ def main ():
 
                 # Write processing commands
                 processing.append("unzip " + analysis_path + "/taxonomy.qza -d " + analysis_path + "/taxonomy.qza_DIR")
-                processing.append("grep -v -E 'Unassigned|uncultured|environmental|unidentified|unclassified|unverified' " + analysis_path + "/taxonomy.qza_DIR/*/data/taxonomy.tsv > taxonomy_output/" + generic_barcode + ".taxonomy.filtered.tsv")  
+                processing.append("grep -v -E 'Unassigned|uncultured|environmental|unidentified|unclassified|unverified' " + analysis_path + "/taxonomy.qza_DIR/*/data/taxonomy.tsv > taxonomy_output/" + generic_barcode + "_" + id + ".taxonomy.filtered.tsv")  
         
-        # Update metadata
-        metadata_df_aug.loc[metadata_df_aug["barcode_set"]==barcode,"path"] = pwd + "/taxonomy_output/" + generic_barcode + ".taxonomy.filtered.tsv"
-        metadata_df_aug.loc[metadata_df_aug["barcode_set"]==barcode,"taxid_protocol"] = "Database:" + primer_pars["S"] + ";" + primer_pars["T"] + ";Method:VSEARCH;Matches" + primer_pars["M"] + ";QueryCoverage:0.80;Identity%:" + "::".join(primer_pars["I"])
+                # Update metadata
+                metadata_df_aug.loc[metadata_df_aug["barcode_set"]==barcode,"path"] = pwd + "/taxonomy_output/" + generic_barcode + "_" + id + ".taxonomy.filtered.tsv"
+                metadata_df_aug.loc[metadata_df_aug["barcode_set"]==barcode,"taxid_protocol"] = "Database:" + primer_pars["S"] + ";" + primer_pars["T"] + ";Method:VSEARCH;Matches" + primer_pars["M"] + ";QueryCoverage:0.80;Identity%:" + "::".join(primer_pars["I"])
         
     output = open("demux_analysis.sh","w")
     output.write("\n".join(commands))
