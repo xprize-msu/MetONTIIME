@@ -12,7 +12,11 @@ ln -s <path_to_meta_data> .
 
 # Setup folder using metadata
 sh /mnt/research/xprize23/gitclones/MetONTIIME/utility_scripts_HPCC/setup_analysis_folder_SLURM.sh <path_to_meta_data> 
-# There are now many versions of this file for different experiment setups but this is base one
+# There are now many versions of this file for different experiment setup:
+# setup_analysis_folder_SLURM.sh --- Submit jobs to SLURM
+# setup_analysis_folder_SLURM_MultiOTU.sh --- Submit jobs to SLURM with multi id% and OTU id = 1.0
+# setup_analysis_folder_SLURM_MultiDB.sh --- Submit jobs to SLURM with multie id% and multiple DBs, OTU id = 1.0
+
 
 # Start a interactive session on a compute not with gpus
 salloc --cpus-per-task 64 --time 4:00:00 --mem 256GB --gpus 2 --reservation=xprize
@@ -22,6 +26,11 @@ sh Launch_MinION_mobile_lab_DemuxAnalysis.sh fast5/
 
 # After SLURM jobs are done (1-2 hours, hopefully)
 sh demux_postprocessing.sh fast5
+
+# If you use one of the multiple run Setup scripts and want to reconline results with different id% and DBs
+# combined_taxonomys_DEDUP.py --- De-duplicate assignment by highest %id
+# combined_taxonomys_RENAME --- De-dup and try to fix SILVA names (mainly species/genus)
+# combined_taxonomys_RENAME_18SDouble.py --- De-dup by DB (Custom > SILVA, harcoded) and fix names
 
 ```
 
