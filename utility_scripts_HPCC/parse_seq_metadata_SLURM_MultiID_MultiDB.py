@@ -11,10 +11,10 @@ db_sets = {
 }
 
 parameter_sets = {
-    "18S": {"Time": "120", "Mem": "128GB", "N": "64", 'DB': [db_sets["SILVA_SSU"],db_sets["Custom_18S"]], 'M': "20", 'I': ["0.92","0.95","0.98"]},
-    "16S": {"Time": "120", "Mem": "128GB", "N": "64", 'DB': [db_sets["SILVA_SSU"]], 'M': "20", 'I': ["0.92","0.95","0.98"]},
-    "12S": {"Time": "60", "Mem": "64GB", "N": "32", 'DB': [db_sets["Custom_12S"]], 'M': "20", 'I': ["0.92","0.95","0.98"]},
-    "COI": {"Time": "120", "Mem": "128GB", "N": "64", 'DB': [db_sets["COI"]], 'M': "20", 'I': ["0.92","0.95","0.98"]},
+    "18S": {"Time": "360", "Mem": "256GB", "N": "64", 'DB': ["SILVA_SSU","Custom_18S"], 'M': "20", 'I': ["0.92","0.95","0.98"]},
+    "16S": {"Time": "360", "Mem": "128GB", "N": "64", 'DB': ["SILVA_SSU"], 'M': "20", 'I': ["0.92","0.95","0.98"]},
+    "12S": {"Time": "60", "Mem": "64GB", "N": "32", 'DB': ["Custom_12S"], 'M': "20", 'I': ["0.92","0.95","0.98"]},
+    "COI": {"Time": "120", "Mem": "128GB", "N": "64", 'DB': ["COI"], 'M': "20", 'I': ["0.92","0.95","0.98"]},
 }
 
 def main ():
@@ -63,8 +63,9 @@ def main ():
    
             # Write on command per DB
             for db in primer_pars["DB"]:
-                db_seqs = db["S"]
-                db_tax = db["T"]
+                db_dict = db_sets[db]
+                db_seqs = db_dict["S"]
+                db_tax = db_dict["T"]
                 # Write on command per id_percent
                 for id in primer_pars["I"]:
                     analysis_path = "${RAW_READS_DIR}_analysis/analysis/" + generic_barcode  + "_" + db + "_" + id  + "_analysis"
@@ -77,11 +78,11 @@ def main ():
 
                     # Write processing commands
                     processing.append("unzip " + analysis_path + "/taxonomy.qza -d " + analysis_path + "/taxonomy.qza_DIR")
-                    processing.append("cp " + analysis_path + "/taxonomy.qza_DIR/*/data/taxonomy.tsv > taxonomy_output/" + generic_barcode + "_" + db + "_" + id + "_taxonomy.tsv" )  
+                    processing.append("cp " + analysis_path + "/taxonomy.qza_DIR/*/data/taxonomy.tsv taxonomy_output/" + generic_barcode + "_" + db + "_" + id + "_taxonomy.tsv" )  
         
                     # Update metadata
-                    metadata_df_aug.loc[metadata_df_aug["barcode_set"]==barcode,"path"] = pwd + "/taxonomy_output/" + generic_barcode + "_" + db + "_" + id + ".taxonomy.filtered.tsv"
-                    metadata_df_aug.loc[metadata_df_aug["barcode_set"]==barcode,"taxid_protocol"] = "Database:" + "".join(primer_pars["DB"]) + ";Method:VSEARCH;Matches" + primer_pars["M"] + ";QueryCoverage:0.80;Identity%:" + "::".join(primer_pars["I"])
+                    #metadata_df_aug.loc[metadata_df_aug["barcode_set"]==barcode,"path"] = pwd + "/taxonomy_output/" + generic_barcode + "_" + db + "_" + id + ".taxonomy.filtered.tsv"
+                    metadata_df_aug.loc[metadata_df_aug["barcode_set"]==barcode,"taxid_protocol"] = "Database:" + "::".join(primer_pars["DB"]) + ";Method:VSEARCH;Matches" + primer_pars["M"] + ";QueryCoverage:0.80;Identity%:" + "::".join(primer_pars["I"])
         
     output = open("demux_analysis.sh","w")
     output.write("\n".join(commands))

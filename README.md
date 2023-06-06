@@ -12,6 +12,7 @@ ln -s <path_to_meta_data> .
 
 # Setup folder using metadata
 sh /mnt/research/xprize23/gitclones/MetONTIIME/utility_scripts_HPCC/setup_analysis_folder_SLURM.sh <path_to_meta_data> 
+# There are now many versions of this file for different experiment setups but this is base one
 
 # Start a interactive session on a compute not with gpus
 salloc --cpus-per-task 64 --time 4:00:00 --mem 256GB --gpus 2 --reservation=xprize
